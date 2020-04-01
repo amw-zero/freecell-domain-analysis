@@ -4,7 +4,7 @@
 var TestLib$IneffectiveTests = require("./TestLib.bs.js");
 var Freecell$IneffectiveTests = require("./Freecell.bs.js");
 
-function testMoveLegality(param) {
+function testLegalityOfFiveOfSpadesAndSixOfHearts(param) {
   var fiveOfSpades = {
     suit: /* Spades */3,
     rank: 5
@@ -24,10 +24,28 @@ function testMoveLegality(param) {
         ];
 }
 
+function testLegalityOfFiveOfSpadesAndSixOfClubs(param) {
+  var isFiveToSixLegal = Freecell$IneffectiveTests.isLegalMove({
+        suit: /* Spades */3,
+        rank: 5
+      }, {
+        suit: /* Clubs */0,
+        rank: 6
+      });
+  return /* :: */[
+          TestLib$IneffectiveTests.Bool.assertEqual(false, isFiveToSixLegal, "Moving the five of spades onto the six of spades is not a legal move"),
+          /* [] */0
+        ];
+}
+
 TestLib$IneffectiveTests.runSuite(/* :: */[
-      testMoveLegality,
-      /* [] */0
+      testLegalityOfFiveOfSpadesAndSixOfHearts,
+      /* :: */[
+        testLegalityOfFiveOfSpadesAndSixOfClubs,
+        /* [] */0
+      ]
     ]);
 
-exports.testMoveLegality = testMoveLegality;
+exports.testLegalityOfFiveOfSpadesAndSixOfHearts = testLegalityOfFiveOfSpadesAndSixOfHearts;
+exports.testLegalityOfFiveOfSpadesAndSixOfClubs = testLegalityOfFiveOfSpadesAndSixOfClubs;
 /*  Not a pure module */

@@ -1,7 +1,7 @@
 open TestLib;
 open Freecell;
 
-let testMoveLegality = () => {
+let testLegalityOfFiveOfSpadesAndSixOfHearts = () => {
   let fiveOfSpades = {suit: Spades, rank: 5};
   let sixOfHearts = {suit: Hearts, rank: 6};
 
@@ -29,4 +29,25 @@ let testMoveLegality = () => {
   ];
 };
 
-runSuite([testMoveLegality]);
+let testLegalityOfFiveOfSpadesAndSixOfClubs = () => {
+  let fiveOfSpades = {suit: Spades, rank: 5};
+  let sixOfClubs = {suit: Clubs, rank: 6};
+
+  let isFiveToSixLegal = isLegalMove(
+    ~sourceCard=fiveOfSpades,
+    ~destinationCard=sixOfClubs
+  );
+
+  [
+    Bool.assertEqual(
+      ~expected=false,
+      ~actual=isFiveToSixLegal,
+      "Moving the five of spades onto the six of spades is not a legal move"
+    )
+  ];
+};
+
+runSuite([
+  testLegalityOfFiveOfSpadesAndSixOfHearts,
+  testLegalityOfFiveOfSpadesAndSixOfClubs
+]);
