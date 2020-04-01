@@ -2,8 +2,17 @@
 'use strict';
 
 
+function cardColor(c) {
+  var match = c.suit;
+  if (match === 2 || match === 1) {
+    return /* Red */0;
+  } else {
+    return /* Black */1;
+  }
+}
+
 function areCardsDifferentColor(c1, c2) {
-  return c1.suit !== c2.suit;
+  return cardColor(c1) !== cardColor(c2);
 }
 
 function areRanksInDescendingOrder(sourceCard, destinationCard) {
@@ -18,6 +27,7 @@ function isLegalMove(sourceCard, destinationCard) {
   }
 }
 
+exports.cardColor = cardColor;
 exports.areCardsDifferentColor = areCardsDifferentColor;
 exports.areRanksInDescendingOrder = areRanksInDescendingOrder;
 exports.isLegalMove = isLegalMove;
