@@ -1,53 +1,87 @@
 open TestLib;
 open Freecell;
 
-let testLegalityOfFiveOfSpadesAndSixOfHearts = () => {
-  let fiveOfSpades = {suit: Spades, rank: 5};
-  let sixOfHearts = {suit: Hearts, rank: 6};
+let ensureRanksAreSequential= () => {
+  let module L = Belt.List;
 
-  let isFiveToSixLegal = isLegalMove(
-    ~sourceCard=fiveOfSpades,
-    ~destinationCard=sixOfHearts
-  );
+  let allRanks = [
+    Ace,
+    Two,
+    Three,
+    Four,
+    Five,
+    Six,
+    Seven,
+    Eight,
+    Nine,
+    Ten,
+    Jack,
+    Queen,
+    King,
+  ];
 
-  let isSixToFiveLegal = isLegalMove(
-    ~sourceCard=sixOfHearts,
-    ~destinationCard=fiveOfSpades
-  );
+  let values = L.map(allRanks, rankValue);
+
+  let (allSequential, _) =
+    L.reduce(values, (true, 0), ((allSeq, prev), v) =>
+      (allSeq && v - prev == 1, v)
+    );
 
   [
-    Bool.assertEqual(
+    assertEqual(
       ~expected=true,
-      ~actual=isFiveToSixLegal,
-      "Moving the five of spades onto the six of hearts is a legal move"
+      ~actual=allSequential,
+      "Ranks must be sequential in order to have equivalence",
     ),
-    Bool.assertEqual(
-      ~expected=false,
-      ~actual=isSixToFiveLegal,
-      "Moving the six of hearts onto the five of spades is not a legal move"
-    )
   ];
 };
 
-let testLegalityOfFiveOfSpadesAndSixOfClubs = () => {
-  let fiveOfSpades = {suit: Spades, rank: 5};
-  let sixOfClubs = {suit: Clubs, rank: 6};
+let testMoveLegalitySubdomains = () => {
+  let module L = Belt.List;
 
-  let isFiveToSixLegal = isLegalMove(
-    ~sourceCard=fiveOfSpades,
-    ~destinationCard=sixOfClubs
-  );
+  let twoOfHearts = {suit: Hearts, rank: Two};
+  let threeOfHearts = {suit: Hearts, rank: Three};
+  let threeOfClubs = {suit: Clubs, rank: Three};
+  let fourOfClubs = {suit: Clubs, rank: Four};
+  let twoOfDiamonds = {suit: Diamonds, rank: Two};
+  let threeOfSpades = {suit: Spades, rank: Three};
+  let fiveOfSpades = {suit: Spades, rank: Five};
 
-  [
-    Bool.assertEqual(
-      ~expected=false,
-      ~actual=isFiveToSixLegal,
-      "Moving the five of spades onto the six of spades is not a legal move"
-    )
+  let descendingDifferentColor = [
+    (twoOfHearts, threeOfClubs, true, "2h -> 3c is legal"),
+    (twoOfHearts, threeOfSpades, true, "2h -> 3s is legal"),
+    (twoOfDiamonds, threeOfSpades, true, "2d -> 3s is legal"),
   ];
+
+  let arbitraryDifferentColor = [
+    (fourOfClubs, twoOfDiamonds, false, "4c -> 2d is not legal"),
+    (twoOfDiamonds, fiveOfSpades, false, "2d -> 5s is not legal"),    
+  ];
+
+  let descendingSameColor = [
+    (twoOfHearts, threeOfHearts, false, "2h -> 3h is not legal"),
+    (fourOfClubs, fiveOfSpades, false, "4c -> 5s is not legal"),
+  ];
+
+  let arbitrarySameColor = [
+    (threeOfSpades, fiveOfSpades, false, "3s -> 5s is not legal"),
+    (threeOfClubs, fiveOfSpades, false, "3c -> 5s is not legal"),
+  ];
+
+  let testTable =
+    L.flatten([
+      descendingDifferentColor,
+      arbitraryDifferentColor,
+      descendingSameColor,
+      arbitrarySameColor,
+    ]);
+
+  L.map(testTable, ((source, dest, expected, msg)) =>
+    Bool.assertEqual(~expected, ~actual=isLegalMove(source, dest), msg)
+  )
+  @ ensureRanksAreSequential();
 };
 
 runSuite([
-  testLegalityOfFiveOfSpadesAndSixOfHearts,
-  testLegalityOfFiveOfSpadesAndSixOfClubs
+  testMoveLegalitySubdomains,
 ]);
