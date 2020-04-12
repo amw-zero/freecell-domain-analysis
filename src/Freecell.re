@@ -60,5 +60,5 @@ let areRanksInDescendingOrder = (source, dest) =>
 
 let isLegalMove = (source, dest) => {
   areCardsDifferentColor(source, dest)
-    && areRanksInDescendingOrder(source, dest);
+  && areRanksInDescendingOrder(source, dest);
 };

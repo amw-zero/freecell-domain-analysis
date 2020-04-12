@@ -1,8 +1,29 @@
 open TestLib;
 open Freecell;
 
-let ensureRanksAreSequential= () => {
-  let module L = Belt.List;
+let testCascadeMoveLegality = () => {
+  let eightOfDiamonds = {suit: Diamonds, rank: Eight};
+  let nineOfSpades = {suit: Spades, rank: Nine};
+
+  let isEightToNineLegal = isLegalMove(eightOfDiamonds, nineOfSpades);
+
+  let isNineToEightLegal = isLegalMove(nineOfSpades, eightOfDiamonds);
+  [
+    assertEqual(
+      ~expected=true,
+      ~actual=isEightToNineLegal,
+      "8d -> 9s is legal",
+    ),
+    assertEqual(
+      ~expected=false,
+      ~actual=isNineToEightLegal,
+      "9s -> 8d is not legal",
+    ),
+  ];
+};
+
+let ensureRanksAreSequential = () => {
+  module L = Belt.List;
 
   let allRanks = [
     Ace,
@@ -37,7 +58,7 @@ let ensureRanksAreSequential= () => {
 };
 
 let testMoveLegalitySubdomains = () => {
-  let module L = Belt.List;
+  module L = Belt.List;
 
   let twoOfHearts = {suit: Hearts, rank: Two};
   let threeOfHearts = {suit: Hearts, rank: Three};
@@ -55,7 +76,7 @@ let testMoveLegalitySubdomains = () => {
 
   let arbitraryDifferentColor = [
     (fourOfClubs, twoOfDiamonds, false, "4c -> 2d is not legal"),
-    (twoOfDiamonds, fiveOfSpades, false, "2d -> 5s is not legal"),    
+    (twoOfDiamonds, fiveOfSpades, false, "2d -> 5s is not legal"),
   ];
 
   let descendingSameColor = [
@@ -82,6 +103,4 @@ let testMoveLegalitySubdomains = () => {
   @ ensureRanksAreSequential();
 };
 
-runSuite([
-  testMoveLegalitySubdomains,
-]);
+runSuite([testCascadeMoveLegality, testMoveLegalitySubdomains]);
