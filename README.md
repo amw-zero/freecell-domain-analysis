@@ -1,11 +1,6 @@
-# Basic Reason Template
+# FreeCell Domain Analysis Example
 
-Hello! This project allows you to quickly get started with Reason and BuckleScript. If you wanted a more sophisticated version, try the `react` template (`bsb -theme react -init .`).
-
-# Build
-```
-npm run build
-```
+This is a simple example of applying domain analysis on a function that calculates the legality of moves in the game of FreeCell. 
 
 # Build + Watch
 
@@ -13,6 +8,8 @@ npm run build
 npm run start
 ```
 
+# Test
 
-# Editor
-If you use `vscode`, Press `Windows + Shift + B` it will build automatically
+```
+npm run test
+```
