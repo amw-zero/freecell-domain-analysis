@@ -58,7 +58,6 @@ let areCardsDifferentColor = (c1, c2) => cardColor(c1) != cardColor(c2);
 let areRanksInDescendingOrder = (source, dest) =>
   rankValue(dest.rank) == rankValue(source.rank) + 1;
 
-let isLegalMove = (source, dest) => {
+let isLegalMove = (source, dest) =>
   areCardsDifferentColor(source, dest)
   && areRanksInDescendingOrder(source, dest);
-};
