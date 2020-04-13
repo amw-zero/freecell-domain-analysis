@@ -4,10 +4,12 @@ open Freecell;
 let testCascadeMoveLegality = () => {
   let eightOfDiamonds = {suit: Diamonds, rank: Eight};
   let nineOfSpades = {suit: Spades, rank: Nine};
+  let tenOfSpades = {suit: Spades, rank: Ten};
 
   let isEightToNineLegal = isLegalMove(eightOfDiamonds, nineOfSpades);
-
   let isNineToEightLegal = isLegalMove(nineOfSpades, eightOfDiamonds);
+  let isNineToTenLegal = isLegalMove(nineOfSpades, tenOfSpades);
+
   [
     assertEqual(
       ~expected=true,
@@ -18,6 +20,11 @@ let testCascadeMoveLegality = () => {
       ~expected=false,
       ~actual=isNineToEightLegal,
       "9s -> 8d is not legal",
+    ),
+    assertEqual(
+      ~expected=false,
+      ~actual=isNineToTenLegal,
+      "9s -> 10s is not legal",
     ),
   ];
 };
